@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CB65FF682050D65000A81CA9 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB65FF672050D65000A81CA9 /* TableViewController.swift */; };
 		CB7581CD204DC622001B0396 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7581CC204DC622001B0396 /* AppDelegate.swift */; };
 		CB7581CF204DC622001B0396 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7581CE204DC622001B0396 /* ViewController.swift */; };
 		CB7581D2204DC622001B0396 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB7581D0204DC622001B0396 /* Main.storyboard */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CB65FF672050D65000A81CA9 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		CB7581C9204DC622001B0396 /* MapsDrawer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapsDrawer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB7581CC204DC622001B0396 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CB7581CE204DC622001B0396 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -56,6 +58,7 @@
 			children = (
 				CB7581CC204DC622001B0396 /* AppDelegate.swift */,
 				CB7581CE204DC622001B0396 /* ViewController.swift */,
+				CB65FF672050D65000A81CA9 /* TableViewController.swift */,
 				CB7581D0204DC622001B0396 /* Main.storyboard */,
 				CB7581D3204DC622001B0396 /* Assets.xcassets */,
 				CB7581D5204DC622001B0396 /* LaunchScreen.storyboard */,
@@ -137,6 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB7581CF204DC622001B0396 /* ViewController.swift in Sources */,
+				CB65FF682050D65000A81CA9 /* TableViewController.swift in Sources */,
 				CB7581CD204DC622001B0396 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

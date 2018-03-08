@@ -9,95 +9,61 @@
 import UIKit
 
 class ViewController: UIViewController {
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var navigationBar: UINavigationBar!
-    @IBOutlet weak var topOfTable: NSLayoutConstraint!
-    @IBOutlet weak var topOfBar: NSLayoutConstraint!
     
-    let threshold: CGFloat = 88
-    let bottom: CGFloat = -44
-    var top: CGFloat {
-        return -view.frame.height + 60
-    }
+    @IBOutlet weak var topMargin: NSLayoutConstraint!
+    
+    weak var scrollView: UIScrollView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        reset()
+        
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(pan(_:)))
+        pan.delegate = self
+        view.addGestureRecognizer(pan)
+        
+        move(0)
     }
     
-    func reset() {
-        tableView.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 0, right: 0)
-        tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let nav = segue.destination as! UINavigationController
+        let table = nav.childViewControllers.first as! UITableViewController
+        scrollView = table.tableView
     }
     
-    var isHiddenDrawer: Bool = true
-    func animation(hidden: Bool) {
-        let y = hidden ? bottom : top
-        self.topOfTable.constant = y
-        self.topOfBar.constant = y
-        self.isHiddenDrawer = hidden
-        UIView.animate(withDuration: 0.3, animations: {
-            self.tableView.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 0, right: 0)
-            self.view.layoutIfNeeded()
-        }, completion: { _ in
-            if hidden {
-                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-            }
-        })
+    func move(_ y: CGFloat) {
+        topMargin.constant = 100 + y
     }
     
-    @IBAction func tap(_ sender: Any) {
-        animation(hidden: !isHiddenDrawer)
-    }
+    var start: CGFloat = 0
     
-    @IBAction func pan(_ sender: Any) {
-        guard let pan = sender as? UIPanGestureRecognizer else { return }
-        let t = pan.translation(in: view)
+    @objc func pan(_ pan: UIPanGestureRecognizer) {
+        let position = pan.location(in: view)
         switch pan.state {
-        case .began, .changed:
-            let y = (isHiddenDrawer ? bottom : top) + t.y
-            topOfTable.constant = y
-            topOfBar.constant = y
+        case .began:
+            start = position.y + scrollView.contentOffset.y
+        case .changed:
+            let diff = position.y - start
+            if diff > 0 {
+                move(diff)
+                scrollView.contentOffset = .zero
+                scrollView.showsVerticalScrollIndicator = false
+            } else {
+                move(0)
+                scrollView.showsVerticalScrollIndicator = true
+            }
         default:
-            animation(hidden: t.y > threshold)
-        }
-    }
-}
-
-extension ViewController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 100
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = "\(indexPath.row)"
-        return cell
-    }
-}
-
-extension ViewController: UIScrollViewDelegate {
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard !isHiddenDrawer else { return }
-        guard !scrollView.isDecelerating else { return }
-        guard scrollView.isDragging else { return }
-        let diff = -44 - scrollView.contentOffset.y
-        if diff < 0 {
-            topOfBar.constant = top
-            scrollView.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 0, right: 0)
-            scrollView.showsHorizontalScrollIndicator = true
+            move(0)
             scrollView.showsVerticalScrollIndicator = true
-        } else {
-            topOfBar.constant = top + diff
-            scrollView.contentInset = UIEdgeInsets(top: 44 + diff, left: 0, bottom: 0, right: 0)
-            scrollView.showsHorizontalScrollIndicator = false
-            scrollView.showsVerticalScrollIndicator = false
+            UIView.animate(withDuration: 0.2) {
+                self.view.layoutIfNeeded()
+            }
         }
     }
+}
+
+extension ViewController: UIGestureRecognizerDelegate {
     
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        animation(hidden: scrollView.contentOffset.y < -threshold)
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
