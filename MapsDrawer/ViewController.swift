@@ -53,10 +53,11 @@ class ViewController: UIViewController {
             }
         default:
             move(0)
-            scrollView.showsVerticalScrollIndicator = true
-            UIView.animate(withDuration: 0.2) {
+            UIView.animate(withDuration: 0.2, animations: {
                 self.view.layoutIfNeeded()
-            }
+            }, completion: { _ in
+                self.scrollView.showsVerticalScrollIndicator = true
+            })
         }
     }
 }
